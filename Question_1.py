@@ -1,6 +1,5 @@
 import random
 
-
 def folding(key: str):
     if len(key) != 12 or not key.isdigit():
         raise ValueError("Key must be a 12-digit IC number.")
@@ -26,9 +25,16 @@ def insert_to_hash_table(ic_list, table_size):
     return table
 
 
+def count_collisions(table):
+    return sum(len(bucket) - 1 for bucket in table if len(bucket) > 1)
+
+
 def main():
     rounds = 10
     table_sizes = [1009, 2003]
+
+    total_collisions_1009 = 0
+    total_collisions_2003 = 0
 
     for round_num in range(1, rounds + 1):
         print(f"\n=== Round {round_num} ===")
@@ -38,12 +44,19 @@ def main():
         table_1009 = insert_to_hash_table(ic_numbers, table_sizes[0])
         table_2003 = insert_to_hash_table(ic_numbers, table_sizes[1])
 
+        collisions_1009 = count_collisions(table_1009)
+        collisions_2003 = count_collisions(table_2003)
+        total_collisions_1009 += collisions_1009
+        total_collisions_2003 += collisions_2003
+
         for i in range (table_sizes[0]):
             print(f"Table[{i}]", end="")
             for values in table_1009[i]:
                 print(f" --> {values}", end="")
             print()
-        
+        print()
+        print(f"Collisions for table size of 1009: {collisions_1009}")
+
         print()
         print(f"Table size: {table_sizes[1]}")
 
@@ -52,7 +65,16 @@ def main():
             for values in table_2003[i]:
                 print(f" --> {values}", end="")
             print()
+        print()
+        print(f"Collisions for table size of 2003: {collisions_2003}")
 
+    total_insertions = rounds * 1000
+    avg_collisions_1009 = (total_collisions_1009/total_insertions) * 100
+    avg_collisions_2003 = (total_collisions_2003/total_insertions) * 100
+
+    print()
+    print(f"Average Collisions for Table Size 1009: {avg_collisions_1009:.2f}%")
+    print(f"Average Collisions for Table Size 2003: {avg_collisions_2003:.2f}%")
 
 if __name__ == "__main__":
     main()
