@@ -1,54 +1,174 @@
+from Question_2_Part1 import UDGraph
 from Question_2_Part2 import Person
 
-class SocialGraph:
+
+class SocialApp:
     def __init__(self):
-        self.adj_list = dict()
+        self.graph = UDGraph()
 
-    def add_person(self, person):
-        if person.name not in self.adj_list:
-            self.adj_list[person] = []
+    def add_user(self, name, age, gender, email):
+        person = Person(name, age, gender, email)
+        self.graph.addVertex(person)
+        return person
+
+
+    def add_follow(self, from_name, to_name):
+        follower = self.find_person_by_name(from_name)
+        followee = self.find_person_by_name(to_name)
+        if follower and followee:
+            self.graph.addEdge(follower, followee)
+
+
+    def view_followee(self, name):
+        person = self.find_person_by_name(name)
+        if person:
+            followee = self.graph.listOutGoingAdjacentVertex(person)
+            return followee
+
+
+    def view_followers(self, name):
+        person = self.find_person_by_name(name)
+        if person:
+            followers = []
+            for user, followings in self.graph.adj_list.items():
+                if person in followings:
+                    followers.append(user)
+            return followers
+
+
+    def find_person_by_name(self, name):
+        for person in self.graph.adj_list:
+            if person.name == name:
+                return person
+        return None
+
+
+def print_header(g, string):
+    print("---------------------------------------------")
+    print(string)
+    print("---------------------------------------------")
+    g.graph.print_adj_list()
+
+def main():
+    g = SocialApp()
+
+    alice = g.add_user("Alice", "20", "Female", "alice20@gmail.com")
+    ben = g.add_user("Ben", "21", "Male", "ben21@gmail.com")
+    chloe = g.add_user("Chloe", "22", "Female", "chloe22@gmail.com")
+    alex = g.add_user("Alex", "20", "Male", "alex20@gmail.com")
+    emma = g.add_user("Emma", "19", "Female", "emma19@gmail.com")
+
+    g.add_follow(alice.name, ben.name)
+    g.add_follow(alice.name, chloe.name)
+    g.add_follow(alice.name, emma.name)
+
+    g.add_follow(ben.name, alice.name)
+    g.add_follow(ben.name, chloe.name)
+
+    g.add_follow(chloe.name, alice.name)
+    g.add_follow(chloe.name, alex.name)
+
+    g.add_follow(alex.name, alice.name)
+    g.add_follow(alex.name, ben.name)
+
+    g.add_follow(emma.name, chloe.name)
+    g.add_follow(emma.name, ben.name)
+
+    while True:
+        print("---------------------------------------------")
+        print("Welcome to Social App")
+        print("---------------------------------------------")
+        print("1. View all profile names")
+        print("2. View details of any profile")
+        print("3. View followers of any profile")
+        print("4. View followed account of any profile")
+        print("5. Quit")
+        print("---------------------------------------------")
+
+        try:
+            choice = int(input("Enter your choice (1 - 5): "))
+            print()
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+            continue
+
+        if choice == 1:
+            print_header(g, "View all profile name")
+            print()
+
+
+        elif choice == 2:
+            print_header(g, "View details of any profile")
+            user_list = list(g.graph.adj_list.keys())
+
+            try:
+                user_index = int(input(f"Select a user profile to view (1 - {len(user_list)}): "))
+                if 1 <= user_index <= len(user_list):
+                    selected_person = user_list[user_index - 1]
+                    print("---------------------------------------------")
+                    print(selected_person.get_person_detail())
+                    print()
+                else:
+                    print("Invalid selection. Please choose a number from the list.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+
+        elif choice == 3:
+            print_header(g, "View followers of any profile")
+            user_list = list(g.graph.adj_list.keys())
+
+            try:
+                user_index = int(input(f"Select a user profile to view followers (1 - {len(user_list)}): "))
+                if 1 <= user_index <= len(user_list):
+                    selected_person = user_list[user_index - 1]
+                    followers = g.view_followers(selected_person.name)
+                    print("---------------------------------------------")
+                    if followers:
+                        print(f"{selected_person.name} followers list: ")
+                        for person in followers:
+                            print(f"- {person}")
+                    else:
+                        print(f"{selected_person.name} has no followers")
+                    print()
+                else:
+                    print("Invalid selection. Please choose a number from the list.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+
+        elif choice == 4:
+            print_header(g, "View followed account of a profile")
+            user_list = list(g.graph.adj_list.keys())
+
+            try:
+                user_index = int(input(f"Select a user profile to view followed account (1 - {len(user_list)}): "))
+                if 1 <= user_index <= len(user_list):
+                    selected_person = user_list[user_index - 1]
+                    followee = g.view_followee(selected_person.name)
+                    print("---------------------------------------------")
+                    if followee:
+                        print(f"{selected_person.name} following list: ")
+                        for person in followee:
+                            print(f"- {person}")
+                    else:
+                        print(f"{selected_person.name} doesn't follow any users")
+                    print()
+                else:
+                    print("Invalid selection. Please choose a number from the list.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+
+        elif choice == 5:
+            print("Thank you for using Social App!")
+            break
+
         else:
-            print(f"User '{person}' already exists.")
-
-    def add_follow(self, from_person, to_person):
-        if from_person in self.adj_list and to_person in self.adj_list:
-            self.adj_list[from_person].append(to_person)
-        else:
-            raise ValueError("One or both usernames not found!")
-
-    def get_following(self, person):
-        return self.adj_list.get(person, [])
-
-    def get_followers(self, person):
-        followers = []
-        for user in self.adj_list:
-            if person in self.adj_list[user]:
-                followers.append(user)
-        return followers
-
-    def print_adj_list(self):
-        for person in self.adj_list:
-            following = ', '.join(str(p) for p in self.adj_list[person])
-            print(f"{person} follows -> {following}")
+            print("Invalid choice. Please select from 1 to 5.")
 
 
-alice = Person("Alice", "20", "Female", "alice20@gmail.com")
-ben = Person("Ben", "21", "Male", "ben21@gmail.com")
-chloe = Person("Chloe", "22", "Female", "chloe22@gmail.com")
-alex = Person("Alex", "20", "Male", "alex20@gmail.com")
-emma = Person("Emma", "19", "Female", "emma19@gmail.com")
 
-g = SocialGraph()
 
-for i in [alice, ben, chloe, alex, emma]:
-    g.add_person(i)
-
-g.add_follow(alice, ben)
-g.add_follow(alice, chloe)
-g.add_follow(ben, alex)
-g.add_follow(ben, emma)
-g.add_follow(chloe, alex)
-g.add_follow(alex, alice)
-g.add_follow(emma, chloe)
-
-print(alice.get_person_detail())
+if __name__ == "__main__":
+    main()
