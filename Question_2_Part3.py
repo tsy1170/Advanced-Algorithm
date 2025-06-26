@@ -86,20 +86,21 @@ def main():
         print("---------------------------------------------")
 
         try:
-            choice = int(input("Enter your choice (1 - 5): "))
+            option = int(input("Enter your option (1 - 5): "))
             print()
         except ValueError:
             print("Invalid input. Please enter a number.")
             continue
 
-        if choice == 1:
+        user_list = list(g.graph.adj_list.keys())
+
+        if option == 1:
             print_header(g, "View all profile name")
             print()
 
 
-        elif choice == 2:
+        elif option == 2:
             print_header(g, "View details of any profile")
-            user_list = list(g.graph.adj_list.keys())
 
             try:
                 user_index = int(input(f"Select a user profile to view (1 - {len(user_list)}): "))
@@ -114,9 +115,8 @@ def main():
                 print("Invalid input. Please enter a number.")
 
 
-        elif choice == 3:
+        elif option == 3:
             print_header(g, "View followers of any profile")
-            user_list = list(g.graph.adj_list.keys())
 
             try:
                 user_index = int(input(f"Select a user profile to view followers (1 - {len(user_list)}): "))
@@ -137,9 +137,8 @@ def main():
                 print("Invalid input. Please enter a number.")
 
 
-        elif choice == 4:
+        elif option == 4:
             print_header(g, "View followed account of a profile")
-            user_list = list(g.graph.adj_list.keys())
 
             try:
                 user_index = int(input(f"Select a user profile to view followed account (1 - {len(user_list)}): "))
@@ -160,12 +159,12 @@ def main():
                 print("Invalid input. Please enter a number.")
 
 
-        elif choice == 5:
+        elif option == 5:
             print("Thank you for using Social App!")
             break
 
         else:
-            print("Invalid choice. Please select from 1 to 5.")
+            print("Invalid option. Please select from 1 to 5.")
 
 
 
