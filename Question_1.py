@@ -73,8 +73,13 @@ def main():
     avg_collisions_2003 = (total_collisions_2003/total_insertions) * 100
 
     print()
-    print(f"Average Collisions for Table Size 1009: {avg_collisions_1009:.2f}%")
-    print(f"Average Collisions for Table Size 2003: {avg_collisions_2003:.2f}%")
+
+    print("Summary:")
+    print("===========================================================")
+    print("{:^12}".format("Table size") + "{:^22}".format("Total Collisions") + "{:^20}".format("Average Collisions (%)"))
+    print("{:^12}".format("1009") + f"{total_collisions_1009:^22,}" + f"{avg_collisions_1009:^20.2f}")
+    print("{:^12}".format("2003") + f"{total_collisions_2003:^22,}" + f"{avg_collisions_2003:^20.2f}")
+    print("===========================================================")
 
 if __name__ == "__main__":
     main()
