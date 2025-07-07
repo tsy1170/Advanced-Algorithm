@@ -26,7 +26,13 @@ def insert_to_hash_table(ic_list, table_size):
 
 
 def count_collisions(table):
-    return sum(len(bucket) - 1 for bucket in table if len(bucket) > 1)
+    total_collisions = 0
+
+    for bucket in table:
+        if len(bucket) > 1:
+            total_collisions += len(bucket) - 1
+
+    return total_collisions
 
 
 def main():
