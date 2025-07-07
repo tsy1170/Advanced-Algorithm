@@ -7,8 +7,8 @@ def generate_random_numbers():
     return [random.randint(0, 10000) for _ in range(100)]
 
 
-def generate_set(name, result_dict):
-    result_dict[name] = generate_random_numbers()
+def generate_set(name, results):
+    results[name] = generate_random_numbers()
 
 
 def run_round_without_threads():
