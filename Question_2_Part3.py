@@ -12,11 +12,11 @@ class SocialApp:
         return person
 
 
-    def add_follow(self, from_name, to_name):
-        follower = self.find_person_by_name(from_name)
-        followee = self.find_person_by_name(to_name)
-        if follower and followee:
-            self.graph.addEdge(follower, followee)
+        def add_follow(self, from_name, to_name):
+        from_person = self.find_person_by_name(from_name)
+        to_person = self.find_person_by_name(to_name)
+        if from_person and to_person:
+            self.graph.addEdge(from_person, to_person)
 
 
     def view_followee(self, name):
