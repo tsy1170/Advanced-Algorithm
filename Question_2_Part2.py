@@ -14,8 +14,6 @@ class Person:
     def __str__(self):
         return f"{self.name}"
 
-    def __repr__(self):
-        return self.__str__()
 
 alice = Person("Alice", "20", "Female", "alice20@gmail.com")
 ben = Person("Ben", "21", "Male", "ben21@gmail.com")
